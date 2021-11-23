@@ -1,0 +1,126 @@
+# Values for gitlab/gitlab chart on GKE
+global:
+  hosts:
+    domain: ${DOMAIN}
+    https: true
+    gitlab: {}
+    externalIP: ${INGRESS_IP}
+    ssh: ~
+
+  ingress:
+    configureCertmanager: true
+    enabled: true
+    tls:
+      enabled: true
+  psql:
+    password:
+      secret: gitlab-pg
+      key: password
+    host: ${DB_PRIVATE_IP}
+    port: 5432
+    username: gitlab
+    database: gitlabhq_production
+
+  redis:
+    password:
+      enabled: false
+    host: ${REDIS_PRIVATE_IP}
+
+  minio:
+    enabled: false
+
+  appConfig:
+    enableUsagePing: false
+
+    backups:
+      bucket: ${PROJECT_ID}-gitlab-backups
+      tmpBucket: ${PROJECT_ID}-gitlab-tmp
+    lfs:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-lfs
+      connection:
+        secret: gitlab-rails-storage
+        key: connection
+    artifacts:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-artifacts
+      connection:
+        secret: gitlab-rails-storage
+        key: connection
+    uploads:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-uploads
+      connection:
+        secret: gitlab-rails-storage
+        key: connection
+    packages:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-packages
+      connection:
+        secret: gitlab-rails-storage
+        key: connection
+    terraformState:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-terraformstate
+      connection:
+        secret: gitlab-rails-storage
+        key: connection
+
+    pseudonymizer:
+      enabled: true
+      bucket: ${PROJECT_ID}-gitlab-pseudonymizer
+      connection:
+        secret: gitlab-rails-storage
+        key: connection
+
+  toolbox:
+    backups:
+      objectStorage:
+        backend: gcs
+        config:
+          gcpProject: ${PROJECT_ID}
+          secret: gitlab-rails-storage
+          key: connection
+certmanager-issuer:
+  email: ${CERT_MANAGER_EMAIL}
+
+prometheus:
+  install: false
+
+redis:
+  install: false
+
+gitlab:
+  gitaly:
+    persistence:
+      size: 200Gi
+      storageClass: "pd-ssd"
+  task-runner:
+    backups:
+      objectStorage:
+        backend: gcs
+        config:
+          secret: google-application-credentials
+          key: gcs-application-credentials-file
+          gcpProject: ${PROJECT_ID}
+postgresql:
+  install: false
+
+gitlab-runner:
+  install: ${GITLAB_RUNNER_INSTALL}
+  rbac:
+    create: true
+  runners:
+    locked: false
+    cache:
+      cacheType: gcs
+      gcsBucketName: ${PROJECT_ID}-runner-cache
+      secretName: google-application-credentials
+      cacheShared: true
+
+registry:
+  enabled: true
+  storage:
+    secret: gitlab-registry-storage
+    key: storage
+    extraKey: gcs.json

@@ -1,0 +1,17 @@
+timeout: 2600s
+steps:
+- id: terraform-init
+  name: hashicorp/terraform:1.0.0
+  args: ['init']
+
+
+- id: terraform-apply
+  name: hashicorp/terraform:1.0.0
+  args: ['apply', '-auto-approve']
+  env:
+    - 'TF_VAR_project_id=${_PROJECT_ID}'
+    - 'TF_VAR_region=${_REGION}'
+    - 'TF_VAR_gitlab_helm_version=${_GITLAB_HELM_VERSION}'
+    - 'TF_VAR_certmanager_email=${_CERTMANAGER_EMAIL}'
+    - 'TF_VAR_domain=${_DOMAIN}'
+    - 'TF_VAR_ip=${_IP}'
