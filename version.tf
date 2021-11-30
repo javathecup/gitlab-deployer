@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "sidespin-gitlab-tf"
+    bucket = "sidespin-tf-state"
     prefix = "terraform/gitlab"
   }
   required_providers {
