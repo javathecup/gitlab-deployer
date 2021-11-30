@@ -10,6 +10,8 @@ GitLab Self-Managed deployment to Google Cloud from Cloudbuild. This repo contai
 
 This added flexibility provides a semi-elastic deployment of GitLab on Google Cloud and the runner integration with workload identity lets GitLab consume Google Cloud products in a very easy way.
 
+## Getting Started
+
 1. Fork this repo
 2. Create a unique storage bucket name, rename bucket in versions.tf
 ```
